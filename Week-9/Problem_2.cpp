@@ -1,47 +1,43 @@
 #include<bits/stdc++.h>
 using namespace std;
-#define INF 1e9
 
 int main() {
 #ifndef ONLINE_JUDGE
-    freopen("input_1.txt", "r", stdin);
-    freopen("output_1.txt", "w", stdout);
+    freopen("input_2.txt", "r", stdin);
+    freopen("output_2.txt", "w", stdout);
 #endif
     int n;
-    // cout << "for values INF enter -1" << endl;
     cin >> n;
-    int a;
-    int arr[n][n], dist[n][n];
+    vector<double> items(n);
+    vector<double> val(n);
+    vector<vector<double>> job;//to store pair of
     for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-            cin >> a;
-            if (a < 0) {
-                arr[i][j] = INF;
-            }
-            else
-                arr[i][j] = a;
-            dist[i][j] = arr[i][j];
-        }
+        cin >> items[i];
     }
-    for (int k = 0; k < n; k++) {
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                if (dist[i][k] + dist[k][j] < dist[i][j]) {
-                    dist[i][j] = dist[i][k] + dist[k][j];
-                }
-            }
-        }
-    }
-    cout << "Shortest Distance Matrix: " << endl;
     for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-            if (dist[i][j] == INF) {
-                cout << "INF ";
-            }
-            else
-                cout << dist[i][j] << " ";
-        }
-        cout << endl;
+        cin >> val[i];
+        job.push_back({ val[i] / items[i], items[i], (double)(i + 1) });
     }
+    double k;
+    cin >> k;
+    sort(job.rbegin(), job.rend());//sort acc to val per wt
+    vector<pair<double, double>> ls;
+    float profit = 0;
+    for (int i = 0; i < n; i++) {
+        if (job[i][1] >= k) {
+            profit += k * job[i][0];
+            ls.push_back(make_pair(k, job[i][2]));
+            break;
+        }
+        else {
+            profit += job[i][1] * job[i][0];
+        }
+        ls.push_back(make_pair(job[i][1], job[i][2]));
+        k = k - job[i][1];
+    }
+    cout << "Maximum Value is: " << profit << endl;
+    cout << "Item - Weight" << endl;
+    for (auto it : ls)
+        cout << it.second << " - " << it.first << endl;
     return 0;
 }
